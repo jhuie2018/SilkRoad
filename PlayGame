@@ -1,0 +1,92 @@
+import java.util.*;
+public class Game {
+
+	public static void main(String[] args) {
+		Scanner console = new Scanner(System.in);
+		countdown(5);
+		String [][] thingsThatHappenToCharacter;
+		String[] badThings= createDangerArray(console);
+		String [] goodThings = createLuckyArray(console);
+
+	}
+	public static void countdown(int num){
+		if(num>0){
+			System.out.print(num+", " );
+			countdown(num-1);
+		}
+		else{
+			System.out.println("Begin!");
+		}
+		
+	}
+	public static String[] createDangerArray(Scanner console){
+		System.out.println("Please enter 5 levels of danger from 10-20");
+		System.out.print("Enter danger Level: ");
+		int entry1= console.nextInt();
+		System.out.print("Enter danger Level: ");
+		int entry2= console.nextInt();
+		System.out.print("Enter danger Level: ");
+		int entry3= console.nextInt();
+		System.out.print("Enter danger Level: ");
+		int entry4= console.nextInt();
+		System.out.print("Enter danger Level: ");
+		int entry5= console.nextInt();
+		int[] arrDanger = {entry1,entry2,entry3,entry4,entry5};
+		//sorts by danger level, so the highest danger is last
+		for (int j = 0; j < arrDanger.length; j++) {
+			for (int i = j + 1; i < arrDanger.length; i++) {
+				int n = arrDanger[j];
+				if (n > arrDanger[i]) {
+					int switcher = arrDanger[j];
+					arrDanger[j] = arrDanger[i];
+					arrDanger[i] = switcher;
+				}
+			}
+		}
+		String[] badThings = {"you hit your head, lose", " you got food poisoning, lose", "you got attacked by bandits, lose",
+							"you broke your arm, lose", "you broke your leg, lose"};
+		
+		for(int i =0; i<5;i++){
+			badThings[i]=badThings[i]+" " +arrDanger[i];
+		}
+		
+		return badThings;
+		
+	}
+	public static String[] createLuckyArray(Scanner console){
+		System.out.println("Please enter 5 amounts of life points from 10-20");
+		System.out.print("Enter life points: ");
+		int entry1= console.nextInt();
+		System.out.print("Enter life points: ");
+		int entry2= console.nextInt();
+		System.out.print("Enter life points: ");
+		int entry3= console.nextInt();
+		System.out.print("Enter life points: ");
+		int entry4= console.nextInt();
+		System.out.print("Enter life points: ");
+		int entry5= console.nextInt();
+		int[] arrLucky = {entry1,entry2,entry3,entry4,entry5};
+		//sorts by danger level, so the highest danger is last
+		for (int j = 0; j < arrLucky.length; j++) {
+			for (int i = j + 1; i < arrLucky.length; i++) {
+				int n = arrLucky[j];
+				if (n > arrLucky[i]) {
+					int switcher = arrLucky[j];
+					arrLucky[j] = arrLucky[i];
+					arrLucky[i] = switcher;
+				}
+			}
+		}
+		String[] goodThings = {"you hit your head, lose", " you got food poisoning, lose", "you got attacked by bandits, lose",
+							"you broke your arm, lose", "you broke your leg, lose"};
+		
+		for(int i =0; i<5;i++){
+			goodThings[i]=goodThings[i]+" " +arrLucky[i];
+		}
+		
+		return goodThings;
+		
+	}
+	
+
+}
