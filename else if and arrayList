@@ -1,0 +1,49 @@
+import java.util.*;
+public class IfElseAndArrayList {
+	
+public ArrayList<String> familyName(){
+	Scanner scan = new Scanner(System.in);
+	String check = "";
+ArrayList<String> familyNames = new ArrayList<String>();
+System.out.println("please enter the names for your family members.  Enter stop when you dont want more");
+while(check != "stop"){
+	check = scan.next();
+	familyNames.add(check);
+}
+return familyNames;
+}
+public String ageOfCharacter(){
+	Scanner scan = new Scanner(System.in);
+	System.out.println("enter an age please.");
+	int age = scan.nextInt();
+	boolean viable = false;
+	
+	if(age <= 6){
+		viable = true;
+		return "baby";
+	}
+	else if(age > 6 && age <= 12){
+		viable = true;
+		return "child";
+	}
+	else if(age > 12 && age <= 17){
+		viable = true;
+		return "teen";
+	}
+	else if(age > 17 && age <= 50){
+		viable = true;
+		return "adult";
+	}
+	else if(age > 50 ){
+		viable = true;
+		return "elderly";
+	}
+	else{
+		System.out.println("age not viable.");
+		return ageOfCharacter();
+	}
+
+
+}
+
+}
