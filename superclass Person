@@ -1,0 +1,13 @@
+public class Person {
+	private int age;
+	private int lifePoints;
+	public Person(){
+		
+	}
+	public int getAge(){
+		return age;
+	}
+	public int getLP(){
+		return lifePoints;
+	}
+}
