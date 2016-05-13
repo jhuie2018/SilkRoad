@@ -1,92 +1,220 @@
 import java.util.*;
-public class Game {
+
+public class Game extends Person {
+	public static final int GAME_DURATION = 5;
 
 	public static void main(String[] args) {
 		Scanner console = new Scanner(System.in);
-		countdown(5);
-		String [][] thingsThatHappenToCharacter;
-		String[] badThings= createDangerArray(console);
-		String [] goodThings = createLuckyArray(console);
+		System.out.print("Please enter a bunch of consanants to create a "
+						+ "random name \n(make sure the first letter is capitalized): ");
+		//user created
+		String name = namer(console.nextLine());
+		System.out.println("Hello " + name);
+		System.out.println("Please enter an age for your character");
+		int age = console.nextInt();
+		Person user = ageOfCharacter(age, name);
+		
+		//family created
+		ArrayList<String> family = new ArrayList<String>();
+		family = familyName(console);
+		
+		//introduction Story
+		introStory(name, family);
+		
+		//danger levels and life additions created 
+		//array of events created
+		int[] dangerLevels = eventAffects(console, "danger level");
+		int[] lifeAdditions = eventAffects(console, "life points");
+		String[] badThings = createDangerArray(dangerLevels);
+		String[] goodThings = createLuckyArray(lifeAdditions);
+		String[][] thingsThatHappenToCharacter = { badThings, goodThings };
+		
+		//start the game
+		playGame(dangerLevels, lifeAdditions, thingsThatHappenToCharacter, user, console);
+		
+	
+	}
+
+	public static String namer(String name) {
+		if (name.length() > 0) {
+			char vowel;
+			int vowelChoice = (int) (Math.random() * 6);
+			if (vowelChoice == 0) {
+				vowel = 'a';
+			} else if (vowelChoice == 1) {
+				vowel = 'e';
+			} else if (vowelChoice == 2) {
+				vowel = 'i';
+			} else if (vowelChoice == 3) {
+				vowel = 'o';
+			} else if (vowelChoice == 4) {
+				vowel = 'u';
+			} else {
+				vowel = 'y';
+			}
+			return "" + name.charAt(0) + vowel + namer(name.substring(1));
+		} else {
+
+			return name;
+		}
 
 	}
-	public static void countdown(int num){
-		if(num>0){
-			System.out.print(num+", " );
-			countdown(num-1);
+
+	public static Person ageOfCharacter(int age, String name) {
+		Person user;
+		boolean viable = false;
+
+		if (age <= 6) {
+			viable = true;
+			System.out.println("Your are a Baby!");
+			user = new Baby(age, name);
+
+		} else if (age > 6 && age <= 12) {
+			viable = true;
+			System.out.println("Your are a Child!");
+			user = new Child(age, name);
+		} else if (age > 12 && age <= 17) {
+			viable = true;
+			System.out.println("Your are a Teen!");
+			user = new Teen(age, name);
+		} else if (age > 17 && age <= 50) {
+			viable = true;
+			System.out.println("Your are an Adult!");
+			user = (Adult) new Adult(age, name);
+		} else if (age > 50) {
+			viable = true;
+			System.out.println("Your are an Elderly!");
+			user = new Elderly(age, name);
+		} else {
+
+			return ageOfCharacter(21, name);
+		}
+		return user;
+
+	}
+
+	public static int[] eventAffects(Scanner console, String event) {
+		System.out.println("\nPlease enter 5 " + event + " amounts from 10-20");
+		System.out.print("Enter " + event + ": ");
+		int entry1 = console.nextInt();
+		System.out.print("Enter " + event + ": ");
+		int entry2 = console.nextInt();
+		System.out.print("Enter " + event + ": ");
+		int entry3 = console.nextInt();
+		System.out.print("Enter " + event + ": ");
+		int entry4 = console.nextInt();
+		System.out.print("Enter " + event + ": ");
+		int entry5 = console.nextInt();
+		int[] arrEvents = { entry1, entry2, entry3, entry4, entry5 };
+		// sorts by danger level and life point additions, so the greatest
+		// amount of points is last
+		for (int j = 0; j < arrEvents.length; j++) {
+			for (int i = j + 1; i < arrEvents.length; i++) {
+				int n = arrEvents[j];
+				if (n > arrEvents[i]) {
+					int switcher = arrEvents[j];
+					arrEvents[j] = arrEvents[i];
+					arrEvents[i] = switcher;
+				}
+			}
+		}
+		return arrEvents;
+	}
+
+	public static String[] createDangerArray(int[] arrDanger) {
+		String[] badThings = { "you hit your head, lose",
+				"you got food poisoning, lose",
+				"you got attacked by bandits, lose",
+				"you broke your arm, lose", "you broke your leg, lose" };
+
+		for (int i = 0; i < 5; i++) {
+			badThings[i] = badThings[i] + " " + arrDanger[i] + " life points";
+		}
+
+		return badThings;
+
+	}
+
+	public static String[] createLuckyArray(int[] arrLucky) {
+		String[] goodThings = { "you found a pretty flower, gain ",
+				"you had a great breakfeast, gain",
+				"you had a great lunch, gain", "you had a great dinner, gain",
+				"you discovered gold, gain " };
+		for (int i = 0; i < 5; i++) {
+			goodThings[i] = goodThings[i] + " " + arrLucky[i] + " life points";
+		}
+		return goodThings;
+	}
+
+	public static int eventOccurs(String[][] thingsThatHappenToCharacter,
+			int[] dangerLevels, int[] lifeAdditions) {
+		Random r = new Random();
+		int changeInPoints;
+		int randomRow = r.nextInt(2);
+		int randomColumn = r.nextInt(5);
+		if (randomRow == 0) {
+			changeInPoints = -1 * dangerLevels[randomColumn];
+		} else {
+			changeInPoints = lifeAdditions[randomColumn];
+		}
+		String event = thingsThatHappenToCharacter[randomRow][randomColumn];
+		System.out.println(event);
+		return changeInPoints;
+
+	}
+
+	public static ArrayList<String> familyName(Scanner console) {
+
+		ArrayList<String> familyNames = new ArrayList<String>();
+		System.out
+				.println("Please enter the names for your family members.  Enter \"stop\" when you dont want more");
+		String check = console.next();
+		while (!(check.equalsIgnoreCase("stop"))) {
+			familyNames.add(check);
+			check = console.next();
+
+		}
+		return familyNames;
+	}
+
+	public static void introStory(String name, ArrayList<String> family) {
+		System.out.print("Ni hao, " + name
+				+ ". You are living in the Han Dynasty, and this is the beginning of your trip along the Silk Road.\n"
+				+ "Your journey will be " + GAME_DURATION
+				+ " days long. Along with your family members (");
+		for (String familyPerson : family) {
+			System.out.print(familyPerson + " ");
+		}
+		System.out.println(")\nyou will travel along a treacherous journey westward to the Mediteranean sea.");
+	}
+
+	public static void playGame(int[] dangerLevels, int[] lifeAdditions,
+			String[][] thingsThatHappenToCharacter, Person user, Scanner console) {
+		System.out.println(user.getLP());
+
+		int day = 1;
+		while (user.getLP() > 0 && day < GAME_DURATION) {
+			System.out.println("\nIt is day " + day);
+			user.changeLP(eventOccurs(thingsThatHappenToCharacter,
+					dangerLevels, lifeAdditions));
+			System.out.println("This is the time of day where you can chose to (sleep) or (explore)\n"
+					+ "chose one activity!");
+			if(console.next().equals("sleep")){
+				user.sleep();
+			}
+			else{
+				user.play();
+			}
+			System.out.println("Now you have "+user.getLP()+" life points left.");
+			day++;
+		}
+		if(user.getLP()>0){
+			System.out.println("Congratulations! You have survived your journey along the Silk Road!");
+			
 		}
 		else{
-			System.out.println("Begin!");
+			System.out.println("I am sorry but you have perished along your journey");
 		}
-		
 	}
-	public static String[] createDangerArray(Scanner console){
-		System.out.println("Please enter 5 levels of danger from 10-20");
-		System.out.print("Enter danger Level: ");
-		int entry1= console.nextInt();
-		System.out.print("Enter danger Level: ");
-		int entry2= console.nextInt();
-		System.out.print("Enter danger Level: ");
-		int entry3= console.nextInt();
-		System.out.print("Enter danger Level: ");
-		int entry4= console.nextInt();
-		System.out.print("Enter danger Level: ");
-		int entry5= console.nextInt();
-		int[] arrDanger = {entry1,entry2,entry3,entry4,entry5};
-		//sorts by danger level, so the highest danger is last
-		for (int j = 0; j < arrDanger.length; j++) {
-			for (int i = j + 1; i < arrDanger.length; i++) {
-				int n = arrDanger[j];
-				if (n > arrDanger[i]) {
-					int switcher = arrDanger[j];
-					arrDanger[j] = arrDanger[i];
-					arrDanger[i] = switcher;
-				}
-			}
-		}
-		String[] badThings = {"you hit your head, lose", " you got food poisoning, lose", "you got attacked by bandits, lose",
-							"you broke your arm, lose", "you broke your leg, lose"};
-		
-		for(int i =0; i<5;i++){
-			badThings[i]=badThings[i]+" " +arrDanger[i];
-		}
-		
-		return badThings;
-		
-	}
-	public static String[] createLuckyArray(Scanner console){
-		System.out.println("Please enter 5 amounts of life points from 10-20");
-		System.out.print("Enter life points: ");
-		int entry1= console.nextInt();
-		System.out.print("Enter life points: ");
-		int entry2= console.nextInt();
-		System.out.print("Enter life points: ");
-		int entry3= console.nextInt();
-		System.out.print("Enter life points: ");
-		int entry4= console.nextInt();
-		System.out.print("Enter life points: ");
-		int entry5= console.nextInt();
-		int[] arrLucky = {entry1,entry2,entry3,entry4,entry5};
-		//sorts by danger level, so the highest danger is last
-		for (int j = 0; j < arrLucky.length; j++) {
-			for (int i = j + 1; i < arrLucky.length; i++) {
-				int n = arrLucky[j];
-				if (n > arrLucky[i]) {
-					int switcher = arrLucky[j];
-					arrLucky[j] = arrLucky[i];
-					arrLucky[i] = switcher;
-				}
-			}
-		}
-		String[] goodThings = {"you hit your head, lose", " you got food poisoning, lose", "you got attacked by bandits, lose",
-							"you broke your arm, lose", "you broke your leg, lose"};
-		
-		for(int i =0; i<5;i++){
-			goodThings[i]=goodThings[i]+" " +arrLucky[i];
-		}
-		
-		return goodThings;
-		
-	}
-	
 
 }
